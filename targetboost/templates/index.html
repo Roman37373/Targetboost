@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Target Prediction API</title>
+  <link href='https://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet'>
+  <link href='https://fonts.googleapis.com/css?family=Arimo' rel='stylesheet'>
+  <link href='https://fonts.googleapis.com/css?family=Hind:300' rel='stylesheet'>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300' rel='stylesheet'>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+  <header>
+    <div class="header-content">
+      <a href="#" class="logo">TargetAI</a>
+      <nav>
+        <a href="#about">О сервисе</a>
+        <a href="#models">Модели</a>
+        <a href="#contact">Контакты</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <div class="container">
+      <div class="card">
+        <h1>Target Prediction System</h1>
+
+        <p class="intro-text">
+          Загрузите поведенческие данные
+        </p>
+
+        <!-- Form for uploading CSV files -->
+        <form action="{{ url_for('predict_page') }}" method="post" enctype="multipart/form-data">
+          <div class="file-upload">
+            <label for="train_file"><i class="fas fa-file-csv"></i> CSV файл c sessions_logs:</label>
+            <input type="file" name="train_file" accept=".csv" required>
+          </div>
+
+          <div class="file-upload">
+            <label for="test_file"><i class="fas fa-file-csv"></i> CSV файл c hits_logs:</label>
+            <input type="file" name="test_file" accept=".csv" required>
+          </div>
+
+          <div class="model-buttons">
+            <button type="submit" name="model" value="model1" class="btn btn-model1">
+              <i class="fas fa-bullseye"></i> Прогнозирование ключевых точек конверсии
+            </button>
+            <button type="submit" name="model" value="model2" class="btn btn-model2">
+              <i class="fas fa-crosshairs"></i> Анализ пользовательского опыта
+            </button>
+            <button type="submit" name="model" value="model3" class="btn btn-model3">
+              <i class="fas fa-chart-line"></i> Оптимизация дополнительных сервисов
+            </button>
+            <button type="submit" name="model" value="model4" class="btn btn-model4">
+              <i class="fas fa-project-diagram"></i> Предотвращение оттока пользователей
+            </button>
+          </div>
+        </form>
+
+        <div class="prediction">
+          {% if prediction_text %}
+            <h3><i class="fas fa-chart-bar"></i> Прогноз вероятности:</h3>
+            <pre>{{ prediction_text }}</pre>
+          {% else %}
+            <h3><i class="fas fa-info-circle"></i> Как это работает</h3>
+            <p>Загрузите поведенческие данные и получите прогнозы по ключевым направлениям для решения различных бизнес-задач</p>
+          {% endif %}
+        </div>
+      </div>
+
+      <div id="about" class="card">
+        <h2><i class="fas fa-info-circle"></i> О нашей сервисе</h2>
+        <p>Наша система прогнозирования использует современные алгоритмы машинного обучения для точного предсказания целевых показателей. В основе системы - ансамбль моделей, объединяющий лучшие подходы.</p>
+
+        <div class="features">
+          <div class="feature">
+            <i class="fas fa-brain"></i>
+            <h3>Продвинутый ИИ</h3>
+            <p>Используем передовые алгоритмы машинного обучения, обученные на тысячах сценариев.</p>
+          </div>
+          <div class="feature">
+            <i class="fas fa-tachometer-alt"></i>
+            <h3>Быстрая обработка</h3>
+            <p>Получайте результаты за секунды благодаря оптимизированным конвейерам прогнозирования.</p>
+          </div>
+          <div class="feature">
+            <i class="fas fa-chart-line"></i>
+            <h3>Высокая точность</h3>
+            <p>Наши модели достигают точности свыше 90% в задачах прогнозирования.</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="models" class="card">
+        <h2><i class="fas fa-project-diagram"></i> Наши модели</h2>
+        <div class="features">
+          <div class="feature">
+            <i class="fas fa-bullseye"></i>
+            <h3> CatBoost</h3>
+            <p>Градиентный бустинг с категориальными признаками. Высокая скорость обучения и точность на табличных данных.</p>
+          </div>
+          <div class="feature">
+            <i class="fas fa-crosshairs"></i>
+            <h3> XGBoost</h3>
+            <p>Экстремальный градиентный бустинг с регуляризацией. Лидер многих соревнований по машинному обучению.</p>
+          </div>
+          <div class="feature">
+            <i class="fas fa-chart-line"></i>
+            <h3> Gradient Boosting</h3>
+            <p>Классический алгоритм бустинга с последовательным построением деревьев решений.</p>
+          </div>
+          <div class="feature">
+            <i class="fas fa-project-diagram"></i>
+            <h3> LogisticRegression (мета-модель)</h3>
+            <p>Объединяет предсказания отдельных моделей для финального прогноза с оптимальными весами.</p>
+          </div>
+          <div class="feature">
+            <i class="fas fa-project-diagram"></i>
+            <h3> Ansamble</h3>
+            <p>Комбинация этих моделей через стэкинг (stacking) позволяет достичь более точных и устойчивых результатов, чем каждая модель в отдельности.</p>
+          </div>
+          <div class="feature">
+            <i class="fas fa-project-diagram"></i>
+            <h3> Optune</h3>
+            <p>Интеллектуальное комбинирование предсказаний с автоматическим подбором оптимальных весов.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer id="contact">
+    <div class="footer-content">
+      <h4>TargetAI Prediction System</h4>
+      <p>© 2025 All Rights Reserved</p>
+      <div class="social-links">
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-github"></i></a>
+        <a href="#"><i class="fab fa-linkedin"></i></a>
+      </div>
+      <p class="contact-info">contact@targetai.com | +1 (555) 123-4567</p>
+    </div>
+  </footer>
+</body>
+</html>
