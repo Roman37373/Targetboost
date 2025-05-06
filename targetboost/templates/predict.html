@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction Results</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        .results-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 2rem;
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .back-btn {
+            background-color: #6c757d;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .back-btn:hover {
+            background-color: #5a6268;
+        }
+
+        .results-table {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .summary-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .summary-card h3 {
+            color: #6c757d;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .summary-card .value {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #4361ee;
+        }
+
+        .positive {
+            color: #28a745 !important;
+        }
+
+        .negative {
+            color: #dc3545 !important;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="/" class="logo">
+                <i class="fas fa-chart-line"></i> Conversion Predictor
+            </a>
+        </div>
+    </header>
+
+    <div class="results-container">
+        <div class="results-header">
+            <h1><i class="fas fa-poll"></i> Prediction Results</h1>
+            <a href="/" class="back-btn">
+                <i class="fas fa-arrow-left"></i> Back to Main
+            </a>
+        </div>
+
+        <div class="summary-cards">
+            <div class="summary-card">
+                <h3>Total Sessions</h3>
+                <div class="value">{{ results|length }}</div>
+            </div>
+            <div class="summary-card">
+                <h3>Conversion Rate</h3>
+                <div class="value positive">
+                    {{ ((results|selectattr('prediction', 'equalto', 1)|list|length) / results|length * 100)|round(2) }}%
+                </div>
+            </div>
+            <div class="summary-card">
+                <h3>Avg Probability</h3>
+                <div class="value">
+                    {{ (results|map(attribute='probability')|sum / results|length)|round(4) }}
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="results-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Session ID</th>
+                            <th>Probability</th>
+                            <th>Prediction</th>
+                            <th>Confidence</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in results %}
+                        <tr>
+                            <td>{{ item.session_id }}</td>
+                            <td>{{ item.probability|round(4) }}</td>
+                            <td>
+                                <span class="badge {% if item.prediction %}badge-success{% else %}badge-danger{% endif %}">
+                                    {% if item.prediction %}Converted{% else %}Not Converted{% endif %}
+                                </span>
+                            </td>
+                            <td>
+                                <div class="progress-container">
+                                    <div class="progress-bar" style="width: {{ item.probability * 100 }}%;
+                                        background-color: {% if item.prediction %}#28a745{% else %}#dc3545{% endif %};">
+                                    </div>
+                                    <span>{{ (item.probability * 100)|round(1) }}%</span>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
